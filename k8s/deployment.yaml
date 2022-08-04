@@ -1,0 +1,55 @@
+#Postgres Deployment
+apiVersion: apps/v1
+kind: Deployment  
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:14.3
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "vWCIcot9Y2MoW8TcEtbGAw=="
+            - name: POSTGRES_USER
+              value: "kube_user"
+            - name: POSTGRES_DB
+              value: "kubenews"
+---
+apiVersion: apps/v1
+kind: Deployment  
+metadata:
+  name: kubenews 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kubenews
+  template:
+    metadata:
+      labels:
+        app: kubenews
+    spec:
+      containers:
+      - name: kubenews
+        image: johnnydapp/kube-news:latest
+        env:
+          - name: DB_PASSWORD
+            value: "vWCIcot9Y2MoW8TcEtbGAw=="
+          - name: DB_USERNAME
+            value: "kube_user"
+          - name: DB_DATABASE
+            value: "kubenews"
+          - name: DB_HOST
+            value: "postgres"
+        
+  
